@@ -1,11 +1,6 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Carlos Valle"
-date: "July 12, 2015"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+Carlos Valle  
+July 12, 2015  
 
 
 ## Loading and preprocessing the data
@@ -16,15 +11,34 @@ This chunk loads the data
 3. Calculates and reports the mean and median of the total number of steps taken per day
 
 
-```{r}
+
+```r
  activity <- read.csv("activity.csv")
  totalsteps <- aggregate(activity$steps, by=list(date = activity$date), FUN=sum, na.rm=TRUE)
  library(ggplot2)
  qplot(x, data = totalsteps, xlab = "total steps per day")
- 
- mean(totalsteps$x)
- median(totalsteps$x)
+```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-1-1.png) 
+
+```r
+ mean(totalsteps$x)
+```
+
+```
+## [1] 9354.23
+```
+
+```r
+ median(totalsteps$x)
+```
+
+```
+## [1] 10395
 ```
 
 ## What is mean total number of steps taken per day?
@@ -36,13 +50,20 @@ This chunk loads the data
 
 2. Displays the 5 minute interval that contains the maximum number of steps averaged accross all days.
 
-```{r}
 
+```r
  meanstepsbyinterval <- aggregate(activity$steps, by=list(interval = activity$interval), FUN=mean, na.rm=TRUE)
  plot(meanstepsbyinterval, type = "l", ylab = "steps per interval averaged accross date")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
  meanstepsbyinterval[meanstepsbyinterval$x == max(meanstepsbyinterval$x), 1]
+```
 
+```
+## [1] 835
 ```
 
 
@@ -63,7 +84,8 @@ Do these values differ from the estimates from the first part of the assignment?
 What is the impact of imputing missing data on the estimates of the total daily number of steps?
 [answer]The data us less skewed. Mean and median converge
 
-```{r}
+
+```r
 missing<- sum(is.na(activity$steps))
 percentmissing <- missing/nrow(activity)
  
@@ -88,10 +110,28 @@ for(i in seq_len(nrow(meanstepsbyinterval)))
 totalsteps2 <- aggregate(newactivity$steps, by=list(date = newactivity$date), FUN=sum, na.rm=TRUE)
 
 qplot(x, data = totalsteps2, xlab = "total steps per day imputed data (mean)")
- 
-mean(totalsteps2$x)
-median(totalsteps2$x)
+```
 
+```
+## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+mean(totalsteps2$x)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(totalsteps2$x)
+```
+
+```
+## [1] 10766.19
 ```
 
 
@@ -107,7 +147,8 @@ interval (xaxis) and the average number of steps taken, averaged across all week
 
 See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r}
+
+```r
 activity$date<- as.POSIXct(activity$date, format="%Y-%m-%d")
 
 activity$weekday <- weekdays(activity$date)
@@ -123,8 +164,8 @@ activity$weekend <- as.factor(activity$weekend)
 meanstepsbyinterval2 <- aggregate(activity$steps, by=list(interval = activity$interval, weekend=activity$weekend), FUN=mean, na.rm=TRUE)
 
 ggplot(meanstepsbyinterval2, aes(interval, x)) + geom_line() + facet_grid(. ~ weekend)+labs(y = "mean steps") 
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 
